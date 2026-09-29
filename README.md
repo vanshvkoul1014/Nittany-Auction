@@ -41,3 +41,14 @@ The Flask session key and helpdesk password come from environment variables. Hel
 ## Team and contributions
 
 Built for CMPSC 431W by Sparsh Bodkhe, Benjamin Nesbitt, Siddarth Gupta, and Vansh Vinod Koul.
+## Screenshots
+
+| Bidder dashboard | Browse categories |
+| --- | --- |
+| ![Bidder dashboard](docs/images/bidder-dashboard.png) | ![Auction categories and listings](docs/images/categories.png) |
+
+| Listing detail and bidding | Seller dashboard |
+| --- | --- |
+| ![Listing detail and bidding](docs/images/listing-detail.png) | ![Seller dashboard](docs/images/seller-dashboard.png) |
+
+![Login page](docs/images/login.png)
