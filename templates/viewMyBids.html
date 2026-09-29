@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}My Bids - NittanyAuction{% endblock %}
+
+{% block content %}
+
+<h2 style="color: #0f2044; margin-bottom: 4px;">My Bids</h2>
+<p style="color: #9aa5be; font-size: 13px; margin-bottom: 24px;">All auctions you have placed bids on</p>
+
+{% if auctions %}
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Auction Title</th>
+                <th>Seller</th>
+                <th>Status</th>
+                <th>Your Bid</th>
+                <th>Highest Bid</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for auction in auctions %}
+            <tr>
+                <td><strong>{{ auction['auction_title'] }}</strong></td>
+                <td style="color: #5a6580;">{{ auction['seller_email_fk'] }}</td>
+                <td>
+                    {% if auction['status'] == 1 %}
+                        <span class="badge badge-active">Ongoing</span>
+                    {% elif auction['status'] == 0 %}
+                        <span class="badge badge-inactive">Closed</span>
+                    {% else %}
+                        <span class="badge badge-sold">Reserve Not Met</span>
+                    {% endif %}
+                </td>
+                <td>${{ auction['bidder_highest_bid'] }}</td>
+                <td>${{ auction['current_highest_bid'] }}</td>
+                <td>
+                    {% if auction['status'] == 0 and auction['current_highest_bid'] == auction['bidder_highest_bid'] %}
+                        <a href="/payment/{{ auction['seller_email_fk'] }}/{{ auction['listing_ID'] }}" class="btn btn-sm btn-gold">Pay Now</a>
+                    {% elif auction['status'] == 0 %}
+                        <span style="color: #9aa5be; font-size: 13px;">Outbid</span>
+                    {% elif auction['status'] == 2 %}
+                        <span style="color: #9aa5be; font-size: 13px;">Reserve not met</span>
+                    {% else %}
+                        <a href="/listing/{{ auction['seller_email_fk'] }}/{{ auction['listing_ID'] }}" class="btn btn-sm btn-outline">View</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p style="color: #9aa5be;">You haven't placed any bids yet. <a href="/categories">Browse listings</a> to get started.</p>
+{% endif %}
+
+<div style="margin-top: 24px;">
+    <a href="{{ url_for('bidder') }}" class="btn btn-outline">&larr; Back to Dashboard</a>
+</div>
+
+{% endblock %}

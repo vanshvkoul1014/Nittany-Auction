@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Promote Listing - NittanyAuction{% endblock %}
+
+{% block content %}
+
+<h2 style="color: #0f2044; margin-bottom: 4px;">Promote Listing</h2>
+<p style="color: #9aa5be; font-size: 13px; margin-bottom: 24px;">Logged in as {{ email }}</p>
+
+<div style="max-width: 520px;">
+    <div class="card">
+        <h3 style="font-size: 15px; margin-bottom: 16px;">{{ listing['auction_title'] }}</h3>
+
+        {% if already_promoted %}
+            <div class="alert alert-success">
+                This listing is already promoted. It will appear at the top of its category and on the home page.
+            </div>
+            <a href="/seller" class="btn btn-outline">Back to Dashboard</a>
+        {% else %}
+            <p style="color: #5a6580; font-size: 14px; margin-bottom: 10px;">
+                Promoting this listing puts it at the top of its category and features it on the 'ALL' home page.
+            </p>
+
+            <div style="background: #fdf6e3; border: 1px solid #e8d898; border-radius: 6px; padding: 14px; margin-bottom: 18px;">
+                <p style="font-size: 13px; color: #5a6580; margin-bottom: 4px;">Reserve Price</p>
+                <p style="font-size: 16px; font-weight: 600; margin-bottom: 10px;">${{ listing['reserve_price'] }}</p>
+                <p style="font-size: 13px; color: #5a6580; margin-bottom: 4px;">Promotion Fee (5%)</p>
+                <p style="font-size: 22px; font-weight: 700; color: #c9a84c;">${{ fee }}</p>
+            </div>
+
+            <form method="POST">
+                <button type="submit" class="btn btn-gold">Pay ${{ fee }} & Promote</button>
+                <a href="/seller" class="btn btn-outline" style="margin-left: 8px;">Cancel</a>
+            </form>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

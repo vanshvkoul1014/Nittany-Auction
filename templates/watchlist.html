@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}My Watchlist - NittanyAuction{% endblock %}
+
+{% block content %}
+
+<h2 style="color: #0f2044; margin-bottom: 4px;">My Watchlist</h2>
+<p style="color: #9aa5be; font-size: 13px; margin-bottom: 24px;">Items you are keeping an eye on</p>
+
+{% if items %}
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Seller</th>
+                <th>Current Bid</th>
+                <th>Bids Left</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('listing_detail', seller_email=item['seller_email'], listing_id=item['listing_id']) }}">
+                        <strong>{{ item['auction_title'] }}</strong>
+                    </a><br>
+                    <small style="color: #9aa5be;">{{ item['product_name'] }}</small>
+                </td>
+                <td style="color: #5a6580;">{{ item['seller_email'] }}</td>
+                <td>${{ item['current_bid'] }}</td>
+                <td>{{ item['remaining_bids'] }}</td>
+                <td>
+                    {% if item['status'] == 1 %}
+                        <span class="badge badge-active">Active</span>
+                    {% elif item['status'] == 0 %}
+                        <span class="badge badge-inactive">Inactive</span>
+                    {% else %}
+                        <span class="badge badge-sold">Sold</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if item['status'] == 1 %}
+                        <a href="{{ url_for('listing_detail', seller_email=item['seller_email'], listing_id=item['listing_id']) }}" class="btn btn-sm btn-primary">Bid</a>
+                    {% endif %}
+                    <form action="{{ url_for('remove_from_watchlist', seller_email=item['seller_email'], listing_id=item['listing_id']) }}" method="post" style="display: inline;">
+                        <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p style="color: #9aa5be;">Your watchlist is empty. <a href="/categories">Browse listings</a> to add some.</p>
+{% endif %}
+
+<div style="margin-top: 24px;">
+    <a href="{{ url_for('bidder') }}" class="btn btn-outline">&larr; Back to Dashboard</a>
+</div>
+
+{% endblock %}

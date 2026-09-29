@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ listing['auction_title'] }} - NittanyAuction{% endblock %}
+
+{% block head %}
+<style>
+    .listing-layout {
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        gap: 24px;
+        align-items: start;
+    }
+    .listing-main {
+        background: #fff;
+        border: 1px solid #e2e6f0;
+        border-radius: 10px;
+        padding: 24px;
+    }
+    .listing-sidebar {
+        background: #fff;
+        border: 1px solid #e2e6f0;
+        border-radius: 10px;
+        padding: 20px;
+        position: sticky;
+        top: 80px;
+    }
+    .listing-img {
+        width: 100%;
+        height: 200px;
+        background: #f4f6fb;
+        border: 1px solid #e2e6f0;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        margin-bottom: 18px;
+    }
+    .meta-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 18px;
+        font-size: 13px;
+    }
+    .meta-label { color: #9aa5be; margin-bottom: 2px; }
+    .meta-value { font-weight: 600; color: #2d3550; }
+    .bid-input-row {
+        display: flex;
+        gap: 8px;
+        margin-top: 8px;
+    }
+    .closed-box {
+        background: #fdecea;
+        border: 1px solid #e8a09a;
+        color: #c0392b;
+        padding: 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        text-align: center;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="breadcrumb" style="margin-bottom: 18px;">
+    <a href="/categories">All</a>
+    <span>&rsaquo;</span>
+    <a href="{{ url_for('categories', category_name=listing['category']) }}">{{ listing['category'] }}</a>
+    <span>&rsaquo;</span>
+    <span class="breadcrumb-current">{{ listing['auction_title'] }}</span>
+</div>
+
+<div class="listing-layout">
+
+    <div class="listing-main">
+        <div class="listing-img">🛍️</div>
+
+        <h1 style="font-size: 20px; color: #0f2044; margin-bottom: 4px;">{{ listing['auction_title'] }}</h1>
+        <p style="color: #9aa5be; font-size: 14px; margin-bottom: 18px;">{{ listing['product_name'] }}</p>
+
+        <div class="meta-grid">
+            <div>
+                <div class="meta-label">Category</div>
+                <div class="meta-value">{{ listing['category'] }}</div>
+            </div>
+            <div>
+                <div class="meta-label">Quantity</div>
+                <div class="meta-value">{{ listing['quantity'] }}</div>
+            </div>
+            <div>
+                <div class="meta-label">Seller</div>
+                <div class="meta-value">{{ listing['seller_email'] }}</div>
+            </div>
+            <div>
+                <div class="meta-label">Max Bids</div>
+                <div class="meta-value">{{ listing['max_bids'] }}</div>
+            </div>
+        </div>
+
+        <hr style="border: none; border-top: 1px solid #f0f2f7; margin-bottom: 16px;">
+
+        <p style="font-size: 14px; color: #5a6580; line-height: 1.7;">{{ listing['product_description'] }}</p>
+
+        <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+            <a href="{{ url_for('categories', category_name=listing['category']) }}" class="btn btn-outline">&larr; Back</a>
+            <a href="{{ url_for('view_bids') }}" class="btn btn-outline">My Bids</a>
+            {% if in_watchlist %}
+                <form action="{{ url_for('remove_from_watchlist', seller_email=listing['seller_email'], listing_id=listing['listing_id']) }}" method="post" style="margin: 0;">
+                    <button type="submit" class="btn btn-outline" style="color: #c0392b;">&#9829; Watchlist</button>
+                </form>
+            {% else %}
+                <form action="{{ url_for('add_to_watchlist', seller_email=listing['seller_email'], listing_id=listing['listing_id']) }}" method="post" style="margin: 0;">
+                    <button type="submit" class="btn btn-outline">&#9825; Watchlist</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="listing-sidebar">
+        {% if listing['status'] == 1 %}
+            <p style="color: #1a7a4a; font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 14px;">&#9679; Active</p>
+        {% else %}
+            <p style="color: #c0392b; font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 14px;">&#9679; Closed</p>
+        {% endif %}
+
+        <p style="font-size: 12px; color: #9aa5be; margin-bottom: 4px;">Current Bid</p>
+        <p style="font-size: 26px; font-weight: 700; color: #c9a84c; margin-bottom: 4px;" id="current_bid">${{ listing['current_bid'] }}</p>
+        <p style="font-size: 12px; color: #9aa5be; margin-bottom: 14px;">Reserve: ${{ listing['reserve_price'] }}</p>
+
+        <p style="font-size: 13px; color: #5a6580; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid #f0f2f7;">
+            Remaining Bids: <strong>{% if listing['status'] == 0 %}0{% else %}{{ listing['remaining_bids'] }}{% endif %}</strong>
+        </p>
+
+        {% if listing['status'] == 1 %}
+            {% if session['email'] == listing['seller_email'] %}
+                <div class = "closed-box">You cannot bid on your own listing.</div>
+
+            {% else %}
+                <form action="/place_bid" method="post" onsubmit="return checkBid()">
+                    <label class="form-label">Your Bid ($)</label>
+                    <div class="bid-input-row">
+                        <input type="number" id="bid" name="bid" class="form-control" placeholder="Amount">
+                        <button type="submit" class="btn btn-gold">Bid</button>
+                    </div>
+                    <span id="price-text" style="font-size: 12px; color: #c0392b; margin-top: 6px; display: none;">Bid must be higher than current bid.</span>
+
+                    <input type="hidden" name="seller-email" value="{{ listing['seller_email'] }}">
+                    <input type="hidden" name="listing-id" value="{{ listing['listing_id'] }}">
+                    <input type="hidden" name="remaining-bids" value="{{ listing['remaining_bids'] }}">
+                    <input type="hidden" name="reserve-price" value="{{ listing['reserve_price'] }}">
+                </form>
+            {% endif %}
+        {% else %}
+        <div class="closed-box">Bidding has ended</div>
+        {% endif %}
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='functions.js') }}"></script>
+<script>
+    var socket = io();
+    socket.emit('join_listing', {
+        'listing_id': "{{ listing['listing_id'] }}",
+        'seller_email': "{{ listing['seller_email'] }}"
+    });
+    socket.on('update page', function(data) {
+        location.reload();
+    });
+</script>
+{% endblock %}

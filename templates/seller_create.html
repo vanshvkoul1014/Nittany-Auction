@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Listing - NittanyAuction{% endblock %}
+
+{% block content %}
+
+<h2 style="color: #0f2044; margin-bottom: 4px;">Create New Listing</h2>
+<p style="color: #9aa5be; font-size: 13px; margin-bottom: 24px;">Logged in as {{ email }}</p>
+
+<div style="max-width: 640px;">
+    {% if error %}
+    <div class="alert alert-error">{{ error }}</div>
+    {% endif %}
+
+    <div class="card">
+        <form action="{{ url_for('create_listing') }}" method="post">
+
+            <div class="form-group">
+                <label class="form-label">Auction Title</label>
+                <input type="text" name="auction_title" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Product Name</label>
+                <input type="text" name="product_name" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Product Description</label>
+                <textarea name="product_description" class="form-control" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Category</label>
+                <select name="category_fk" class="form-control" required>
+                    {% for category in categories %}
+                        <option value="{{ category['category_name'] }}">{{ category['category_name'] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-row-3">
+                <div class="form-group">
+                    <label class="form-label">Quantity</label>
+                    <input type="number" name="quantity" class="form-control" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Reserve Price ($)</label>
+                    <input type="number" name="reserve_price" class="form-control" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Max Bids</label>
+                    <input type="number" name="max_bids" class="form-control" min="1" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Create Listing</button>
+            <a href="/seller" class="btn btn-outline" style="margin-left: 8px;">Cancel</a>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

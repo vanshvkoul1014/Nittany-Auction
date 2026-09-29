@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Helpdesk Request - NittanyAuction{% endblock %}
+
+{% block content %}
+
+<h2 style="color: #0f2044; margin-bottom: 4px;">Helpdesk Request</h2>
+<p style="color: #9aa5be; font-size: 13px; margin-bottom: 24px;">Logged in as {{ email }}</p>
+
+<div style="max-width: 520px;">
+    {% if error %}
+    <div class="alert alert-error">{{ error }}</div>
+    {% endif %}
+
+    <div class="card">
+        <p style="font-size: 13px; color: #5a6580; margin-bottom: 18px;">
+            Describe your request, either a category request or email change request. A HelpDesk staff member will review your request.
+        </p>
+
+        <form action="{{ url_for('submit_category_request') }}" method="post">
+            <div class="form-group">
+                <label class="form-label">Category Description</label>
+                <textarea name="request_desc" class="form-control" placeholder="e.g. Vintage Board Games — for collectible pre-2000 tabletop games..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit Request</button>
+            <a href="{{ '/seller' if session['role'] == 'Seller' else '/bidder' }}" class ="btn btn-outline" style="margin-left: 8px;">Cancel</a>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

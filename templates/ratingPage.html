@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Rate Seller - NittanyAuction{% endblock %}
+
+{% block content %}
+
+<h2 style="color: #0f2044; margin-bottom: 4px;">Rate Your Seller</h2>
+<p style="color: #9aa5be; font-size: 13px; margin-bottom: 24px;">Your feedback helps other buyers on NittanyAuction</p>
+
+<div style="max-width: 460px;">
+    <div class="card">
+        <form action="/insert_rating" method="post">
+
+            <div class="form-group">
+                <label class="form-label">Seller</label>
+                <input type="text" name="seller-email" class="form-control" value="{{ listing['seller_email'] }}" readonly>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Rating</label>
+                <select name="rating" class="form-control">
+                    <option value="1">1 - Poor</option>
+                    <option value="2">2 - Fair</option>
+                    <option value="3" selected>3 - Good</option>
+                    <option value="4">4 - Very Good</option>
+                    <option value="5">5 - Excellent</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Comments</label>
+                <textarea name="desc" class="form-control" placeholder="Describe your experience..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <a href="{{ url_for('bidder') }}" class="btn btn-outline" style="margin-left: 8px;">Skip</a>
+
+        </form>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}HelpDesk Dashboard - NittanyAuction{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <h1>HelpDesk Dashboard</h1>
+    <p>{{ email }}</p>
+</div>
+
+<h2 class="section-title">Unassigned Requests</h2>
+{% if unassigned %}
+<div class="table-wrap mb-3">
+    <table>
+        <thead>
+            <tr>
+                <th>Request ID</th>
+                <th>Sender</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for req in unassigned %}
+            <tr>
+                <td><strong>#{{ req['request_id_pk'] }}</strong></td>
+                <td style="color: #5a6580;">{{ req['sender_email_fk'] }}</td>
+                <td><span class="badge badge-inactive">{{ req['request_type'] }}</span></td>
+                <td>{{ req['request_desc'] }}</td>
+                <td>
+                    <form action="{{ url_for('claim_request') }}" method="post" style="margin: 0;">
+                        <input type="hidden" name="request_id" value="{{ req['request_id_pk'] }}">
+                        <button type="submit" class="btn btn-sm btn-primary">Claim</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p class="text-muted mb-3">No unassigned requests.</p>
+{% endif %}
+
+<h2 class="section-title mt-3">My Requests</h2>
+{% if my_requests %}
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Request ID</th>
+                <th>Sender</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for req in my_requests %}
+            <tr>
+                <td><strong>#{{ req['request_id_pk'] }}</strong></td>
+                <td style="color: #5a6580;">{{ req['sender_email_fk'] }}</td>
+                <td><span class="badge badge-active">{{ req['request_type'] }}</span></td>
+                <td>{{ req['request_desc'] }}</td>
+                <td>
+                    <a href="{{ url_for('approve_request', request_id=req['request_id_pk']) }}" class="btn btn-sm btn-gold">Approve</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p class="text-muted">No requests assigned to you.</p>
+{% endif %}
+
+{% endblock %}

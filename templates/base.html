@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}NittanyAuction{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static',filename = 'functions.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    {% block head %}{% endblock %}
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-inner">
+        <a href="{% if session.get('role') == 'Bidder' %}/bidder{% elif session.get('role') == 'Seller' %}/seller{% elif session.get('role') == 'HelpDesk' %}/helpdesk{% else %}/{% endif %}" class="nav-logo">
+            <span class="logo-nittany">Nittany</span><span class="logo-auction">Auction</span>
+        </a>
+        {% if session.get('email') %}
+        <div class="nav-links">
+            {% if session.get('role') != 'HelpDesk' %}
+                <a href="/categories" class="nav-link">Browse Categories</a>
+                <a href="/search" class="nav-link">Search</a>
+            {% endif %}
+            {% if session.get('role') == 'Bidder' %}
+                <a href="/bidder" class="nav-link">Dashboard</a>
+            {% elif session.get('role') == 'Seller' %}
+                <a href="/seller" class="nav-link">Dashboard</a>
+            {% elif session.get('role') == 'HelpDesk' %}
+                <a href="/helpdesk" class="nav-link">Dashboard</a>
+            {% endif %}
+            <a href="/logout" class="nav-link nav-logout">Logout</a>
+            <span class="nav-email">{{ session.get('email') }}</span>
+        </div>
+        {% endif %}
+    </div>
+</nav>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-container">
+            {% for category, message in messages %}
+                <div class="flash flash-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<main class="main-content">
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="footer">
+    <div class="footer-inner">
+        <span class="footer-logo"><span class="logo-nittany">Nittany</span><span class="logo-auction">Auction</span></span>
+        <span class="footer-text">CMPSC 431W &mdash; Penn State University</span>
+    </div>
+</footer>
+
+{% block scripts %}{% endblock %}
+</body>
+</html>

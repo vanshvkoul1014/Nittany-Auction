@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Receipt - NittanyAuction{% endblock %}
+
+{% block content %}
+
+<h2 style="color: #0f2044; margin-bottom: 4px;">Payment Confirmed!</h2>
+<p style="color: #9aa5be; font-size: 13px; margin-bottom: 24px;">Your transaction was successful.</p>
+
+<div style="max-width: 480px;">
+    <div class="card" style="margin-bottom: 20px;">
+        <h3 style="font-size: 15px; margin-bottom: 16px;">Receipt — Listing #{{ listing['listing_id'] }}</h3>
+
+        {% if listing %}
+        <table style="width: 100%; font-size: 14px; border-collapse: collapse;">
+            {% for l in listing.keys() %}
+                {% if l not in ['reserve_price', 'max_bids', 'status', 'remaining_bids'] %}
+                <tr>
+                    <td style="padding: 7px 0; color: #9aa5be; width: 40%;">{{ l | replace('_', ' ') | title }}</td>
+                    <td style="padding: 7px 0; font-weight: 600;">{{ listing[l] }}</td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+        {% endif %}
+    </div>
+
+    <a href="/rating_link/{{ listing['seller_email'] }}/{{ listing['listing_id'] }}" class="btn btn-gold">Rate Your Seller</a>
+    <a href="{{ url_for('bidder') }}" class="btn btn-outline" style="margin-left: 8px;">Go Home</a>
+</div>
+
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Search Results - NittanyAuction{% endblock %}
+
+{% block content %}
+
+<h2 style="color: #0f2044; margin-bottom: 20px;">Search Listings</h2>
+
+<div class="search-bar">
+    <form action="{{ url_for('search') }}" method="get" style="display: flex; gap: 12px; flex-wrap: wrap; width: 100%; align-items: flex-end;">
+        <div class="form-group" style="flex: 2; min-width: 180px; margin-bottom: 0;">
+            <label class="form-label">Keyword</label>
+            <input type="text" name="keyword" class="form-control" value="{{ keyword }}" placeholder="Search listings...">
+        </div>
+        <div class="form-group" style="flex: 1; min-width: 120px; margin-bottom: 0;">
+            <label class="form-label">Min Price ($)</label>
+            <input type="number" name="min_price" class="form-control" value="{{ min_price }}" placeholder="0">
+        </div>
+        <div class="form-group" style="flex: 1; min-width: 120px; margin-bottom: 0;">
+            <label class="form-label">Max Price ($)</label>
+            <input type="number" name="max_price" class="form-control" value="{{ max_price }}" placeholder="Any">
+        </div>
+        <div style="margin-bottom: 0;">
+            <button type="submit" class="btn btn-primary">Search</button>
+            <a href="/search" class="btn btn-outline" style="margin-left: 8px;">Clear</a>
+        </div>
+    </form>
+</div>
+
+{% if results %}
+    <p style="color: #9aa5be; font-size: 13px; margin-bottom: 20px;">
+        {{ results|length }} result{% if results|length != 1 %}s{% endif %}{% if keyword %} for "{{ keyword }}"{% endif %}
+    </p>
+
+    <div class="listings-grid">
+        {% for product in results %}
+        <div class="listing-card">
+            <div class="listing-card-img">🛍️</div>
+            <div class="listing-card-body">
+                <div class="listing-card-tag">{{ product['category'] }}</div>
+                <div class="listing-card-title">
+                    <a href="{{ url_for('listing_detail', seller_email=product['seller_email'], listing_id=product['listing_id']) }}">
+                        {{ product['auction_title'] }}
+                    </a>
+                </div>
+                <div class="listing-card-price">${{ product['reserve_price'] }}</div>
+                <div class="listing-card-bid">Current Bid: ${{ product['current_bid'] }}</div>
+                <div class="listing-card-meta">
+                    <span>{{ product['seller_email'] }}</span>
+                    <a href="{{ url_for('listing_detail', seller_email=product['seller_email'], listing_id=product['listing_id']) }}" class="btn btn-sm btn-primary">View</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p style="color: #9aa5be; margin-top: 20px;">
+        No listings found{% if keyword %} for "{{ keyword }}"{% endif %}. Try a different search.
+    </p>
+{% endif %}
+
+<div style="margin-top: 28px;">
+    <a href="/bidder" class="btn btn-outline">&larr; Back to Dashboard</a>
+</div>
+
+{% endblock %}

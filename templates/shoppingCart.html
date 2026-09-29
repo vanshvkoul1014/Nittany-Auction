@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nittany Auction Shopping Cart</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+
+</head>
+<body>
+<h2>Your Shopping Cart:</h2>
+{% for listing in cart %}
+
+    <div>
+    <form action="/place_bid" method="post" onsubmit="return checkBid()">
+        {% for key in listing.keys() %}
+        <label for = "{{ key}}">{{ key |replace('_',' ')| title }}: </label>
+        <span id="{{ key }}">{{ listing[key]}}</span><br>
+        {% endfor %}
+     <label for='bid'> Enter your bid amount: </label>
+        <input id = 'bid' name = 'bid' type = 'number'>
+        <input name = 'seller-email'  hidden value = {{ listing['seller_email']}} >
+        <input name = 'listing-id' hidden value = {{listing['listing_id']}}>
+        <input name = 'remaining-bids' hidden value = {{listing['remaining_bids']}}>
+        <input name = 'reserve-price' hidden value = {{ listing['reserve_price'] }}>
+    <button type="submit">submit</button>
+    </form>
+    </div>
+{% endfor %}
+
+<script type="text/javascript">
+    var socket = io();
+    {% for listing in cart %}
+    socket.emit('join_listing',{
+        'listing_id': "{{ listing['listing_id'] }}",
+        'seller_email':"{{ listing['seller_email'] }}"
+    })
+    {% endfor %}
+
+    socket.on('update page',(data)=>{location.reload()})
+    socket.on('listing in cart',(data)=>document.getElementById('listing-message').hidden = false)
+</script>
+</body>
+</html>

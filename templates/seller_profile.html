@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Profile - NittanyAuction{% endblock %}
+
+{% block content %}
+
+<h2 style="color: #0f2044; margin-bottom: 4px;">Edit Profile</h2>
+<p style="color: #9aa5be; font-size: 13px; margin-bottom: 24px;">Logged in as {{ email }}</p>
+
+<div style="max-width: 500px;">
+    {% if error %}
+    <div class="alert alert-error">{{ error }}</div>
+    {% endif %}
+
+    <p style="font-size: 13px; color: #5a6580; margin-bottom: 20px;">
+        <strong>Note:</strong> Your email address cannot be changed here. Submit a HelpDesk request if you need to update it.
+    </p>
+
+    <form action="{{ url_for('seller_profile') }}" method="post">
+        <div class="card">
+
+            <h3 style="font-size: 15px; margin-bottom: 16px;">Bank Information</h3>
+
+            <div class="form-group">
+                <label class="form-label">Bank Routing Number</label>
+                <input type="text" name="routing_number" class="form-control" value="{{ seller['bank_routing_number'] }}" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Bank Account Number</label>
+                <input type="text" name="account_number" class="form-control" value="{{ seller['bank_account_number'] }}" required>
+            </div>
+
+            <hr style="border: none; border-top: 1px solid #e2e6f0; margin: 16px 0;">
+
+            <div class="form-group">
+                <label class="form-label">New Password <span style="color: #9aa5be; font-weight: 400;">(leave blank to keep current)</span></label>
+                <input type="password" name="new_password" class="form-control" placeholder="Enter new password">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a href="/seller" class="btn btn-outline" style="margin-left: 8px;">Cancel</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

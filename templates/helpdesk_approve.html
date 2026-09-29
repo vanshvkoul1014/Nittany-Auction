@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Approve Request - NittanyAuction{% endblock %}
+
+{% block content %}
+
+<h2 style="color: #0f2044; margin-bottom: 4px;">Approve Category Request</h2>
+<p style="color: #9aa5be; font-size: 13px; margin-bottom: 24px;">Logged in as {{ email }}</p>
+
+<div style="max-width: 600px;">
+    {% if error %}
+    <div class="alert alert-error">{{ error }}</div>
+    {% endif %}
+
+    <div class="card mb-3">
+        <h3 style="font-size: 15px; margin-bottom: 12px;">Request #{{ req['request_id_pk'] }}</h3>
+        <p style="font-size: 13px; color: #9aa5be; margin-bottom: 4px;">From</p>
+        <p style="font-weight: 600; margin-bottom: 12px;">{{ req['sender_email_fk'] }}</p>
+        <p style="font-size: 13px; color: #9aa5be; margin-bottom: 4px;">Description</p>
+        <p>{{ req['request_desc'] }}</p>
+    </div>
+
+    <div class="card">
+        <h3 style="font-size: 15px; margin-bottom: 16px;">Create New Category</h3>
+
+        <form action="{{ url_for('approve_request', request_id=req['request_id_pk']) }}" method="post">
+            <div class="form-grAoup">
+                <label class="form-label">New Category Name</label>
+                <input type="text" name="category_name" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Parent Category</label>
+                <select name="parent_category" class="form-control">
+                    <option value="">None (Top-Level Category)</option>
+                    {% for cat in categories %}
+                        <option value="{{ cat['category_name'] }}">{{ cat['category_name'] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Approve & Create</button>
+            <a href="/helpdesk" class="btn btn-outline" style="margin-left: 8px;">Cancel</a>
+        </form>
+    </div>
+</div>
+{% if req['request_type'] == 'general' %}
+    <div class="card" style="margin-top: 16px;">
+        <form action="{{ url_for('email_change', request_id=req['request_id_pk']) }}" method="post">
+            <input type="email" name="new_email" class="form-control" placeholder="New email address" required>
+            <button type="submit" class ="btn btn-primary" style="margin-top: 8px;"> Update Email</button>
+        </form>
+    </div>
+{% endif %}
+{% endblock %}
+

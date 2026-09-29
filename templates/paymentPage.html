@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Payment - NittanyAuction{% endblock %}
+
+{% block content %}
+
+<h2 style="color: #0f2044; margin-bottom: 4px;">Complete Payment</h2>
+<p style="color: #9aa5be; font-size: 13px; margin-bottom: 24px;">Review your details and confirm</p>
+
+<div style="max-width: 520px;">
+    <form action="/process_payment/{{ sellerEmail }}/{{ listing_id }}" method="POST">
+
+        <div class="card" style="margin-bottom: 18px;">
+            <h3 style="font-size: 15px; margin-bottom: 16px;">Card Details</h3>
+            {% if ccinfo %}
+                {% for c in ccinfo.keys() if c != 'owner_email_fk' %}
+                <div class="form-group">
+                    <label class="form-label">{{ c | replace('_', ' ') | title }}</label>
+                    <input type="text" name="{{ c }}" class="form-control" value="{{ ccinfo[c] }}">
+                </div>
+                {% endfor %}
+            {% else %}
+                <p style="color: #9aa5be; font-size: 13px;">No card on file.</p>
+            {% endif %}
+        </div>
+
+        <div class="card" style="margin-bottom: 18px;">
+            <h3 style="font-size: 15px; margin-bottom: 16px;">Billing Address</h3>
+            {% for a in addrInfo.keys() %}
+            <div class="form-group">
+                <label class="form-label">{{ a | replace('_', ' ') | title }}</label>
+                <input type="text" name="{{ a }}" class="form-control" value="{{ addrInfo[a] }}">
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="card" style="margin-bottom: 24px;">
+            <h3 style="font-size: 15px; margin-bottom: 8px;">Payment Amount</h3>
+            {% for amt in paymentAmt.keys() %}
+            <p style="font-size: 26px; font-weight: 700; color: #c9a84c;">${{ paymentAmt[amt] }}</p>
+            <input type="hidden" name="amount" value="{{ paymentAmt[amt] }}">
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px;">Confirm Payment</button>
+        <p style="text-align: center; margin-top: 12px;">
+            <a href="{{ url_for('bidder') }}" style="font-size: 13px; color: #9aa5be;">Cancel</a>
+        </p>
+
+    </form>
+</div>
+
+{% endblock %}

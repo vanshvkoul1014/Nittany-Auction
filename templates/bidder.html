@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - NittanyAuction{% endblock %}
+
+{% block head %}
+<style>
+    .dashboard-cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-bottom: 32px;
+    }
+    .quick-links {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 24px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <h1>Welcome back!</h1>
+    <p>{{ email }}</p>
+</div>
+
+{% if notifications %}
+<div style="margin-bottom: 24px;">
+    <h2 class="section-title">Notifications</h2>
+    {% for notification in notifications %}
+    <div class="notification-item">
+        <span>{{ notification.message | safe }}</span>
+        <a href="/clear_notifications/{{ notification['notification_ID'] }}" class="btn btn-sm btn-outline">Dismiss</a>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="dashboard-cards">
+    <div class="card" style="text-align: center;">
+        <div style="font-size: 2rem; margin-bottom: 10px;">🗂️</div>
+        <h3 class="card-title">Browse Categories</h3>
+        <p style="font-size: 13px; color: #9aa5be; margin-bottom: 16px;">Browse through our available categories to find items of interest.</p>
+        <a href="/categories" class="btn btn-primary" style="width: 100%; text-align: center; display: block;">View Categories</a>
+    </div>
+
+    <div class="card">
+        <h3 class="card-title">Search Products</h3>
+        <form action="{{ url_for('search') }}" method="get">
+            <div class="form-group">
+                <input type="text" name="keyword" class="form-control" placeholder="Enter keywords...">
+            </div>
+            <div class="form-row" style="margin-bottom: 12px;">
+                <input type="number" name="min_price" class="form-control" placeholder="Min ($)">
+                <input type="number" name="max_price" class="form-control" placeholder="Max ($)">
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Search</button>
+        </form>
+    </div>
+
+    <div class="card" style="text-align: center;">
+        <div style="font-size: 2rem; margin-bottom: 10px;">🏷️</div>
+        <h3 class="card-title">My Bids</h3>
+        <p style="font-size: 13px; color: #9aa5be; margin-bottom: 16px;">Track all the auctions you've placed bids on.</p>
+        <a href="{{ url_for('view_bids') }}" class="btn btn-primary" style="width: 100%; text-align: center; display: block;">View My Bids</a>
+    </div>
+</div>
+
+<div class="quick-links">
+    <a href="/watchlist" class="btn btn-outline">&#9825; My Watchlist</a>
+    <a href="/bidder/profile" class="btn btn-outline">&#9998; Edit Profile</a>
+    <a href="{{ url_for('bidder_request') }}">Submit a helpdesk request</a>
+    <a href="{{ url_for('chatHome') }}" class="btn btn-outline">&#128172; Messages</a>
+</div>
+
+{% endblock %}

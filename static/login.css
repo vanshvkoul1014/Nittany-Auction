@@ -1,0 +1,85 @@
+        body{
+            font-family:Verdana, Geneva, sans-serif;
+            background-color: #e8e8e8;
+            margin: 0;
+            padding: 0;
+        }
+        #header{
+            background: linear-gradient(to bottom, #003366, #001a33);
+            color: white;
+            padding:12px 20px;
+            font-size: 22px;
+            font-weight: bold;
+            border-bottom: 3px solid #ffcc00
+        }
+        #header span{
+            color: #ffcc00
+        }
+        #content{
+            width: 420px;
+            margin:60px auto;
+            background: #ffffff;
+            border:1px solid #b0b0b0;
+            border-radius: 6px;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.15);
+            padding: 30px;
+        }
+        #content h2{
+            font-size: 18px;
+            color: #003366;
+            border-bottom:1px solid #ddd;
+            padding-bottom: 8px;
+            margin-bottom:20px;
+        }
+        .error-msg{
+            background-color: #ffe0e0;
+            border: 1px solid #cc0000;
+            color: #cc0000;
+            padding: 8px;
+            margin-bottom:15px;
+            font-size:12px;
+            border-radius:3px;
+        }
+        label{
+            font-size: 13px;
+            color: #333;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="password"]{
+            width: 100%;
+            padding:6px;
+            margin-top:4px;
+            margin-bottom:14px;
+            border: 1px solid #999;
+            border-radius:3px;
+            font-size: 13px;
+            font-family: Verdana, Geneva, sans-serif;
+        }
+        input[type="text"]:focus, input[type="password"]:focus{
+            border-color: #003366;
+        }
+        button{
+            background: linear-gradient(to bottom, #336699, #003366);
+            color:white;
+            border: 1px solid #002244;
+            padding: 8px 24px;
+            font-size: 13px;
+            font-family: Verdana, Generva, sans-serif;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        button:hover{
+            background: linear-gradient(to bottom, #4477aa, #004488);
+        }
+        #footer{
+            text-align: center;
+            margin-top: 40px;
+            font-size: 11px;
+            color: #888
+        }
+        #reg-link{
+            text-align: center;
+            margin-top: 40px;
+            font-size: 15px;
+            color: #888
+        }

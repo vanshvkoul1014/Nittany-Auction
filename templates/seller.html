@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - NittanyAuction{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <h1>Welcome back!</h1>
+    <p>{{ email }}</p>
+</div>
+
+{% if error %}
+<div class="alert alert-error">{{ error }}</div>
+{% endif %}
+
+<div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px;">
+    <a href="/seller/create" class="btn btn-gold">&#43; Create New Listing</a>
+    <a href="/seller/request" class="btn btn-outline">Submit Helpdesk Request</a>
+    <a href="/seller/profile" class="btn btn-outline">&#9998; Edit Profile</a>
+    <a href="{{ url_for('chatHome') }}" class="btn btn-outline">&#128172; Messages</a>
+</div>
+
+<h2 class="section-title">Active Listings</h2>
+{% if active %}
+<div class="table-wrap mb-3">
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Reserve Price</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for listing in active %}
+            <tr>
+                <td><strong>{{ listing['auction_title'] }}</strong></td>
+                <td>{{ listing['product_name'] }}</td>
+                <td style="color: #5a6580;">{{ listing['category_fk'] }}</td>
+                <td>${{ listing['reserve_price'] }}</td>
+                <td><span class="badge badge-active">Active</span></td>
+                <td>
+                    <a href="{{ url_for('edit_listing', listing_id=listing['listing_ID']) }}" class="btn btn-sm btn-outline">Edit</a>
+                    <a href="{{ url_for('remove_listing', listing_id=listing['listing_ID']) }}" class="btn btn-sm btn-danger">Remove</a>
+                    <a href="/seller/promote/{{ listing['listing_ID'] }}" class="btn btn-sm btn-gold">Promote</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p class="text-muted mb-3">No active listings.</p>
+{% endif %}
+
+<h2 class="section-title">Inactive Listings</h2>
+{% if inactive %}
+<div class="table-wrap mb-3">
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Product</th>
+                <th>Reserve Price</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for listing in inactive %}
+            <tr>
+                <td><strong>{{ listing['auction_title'] }}</strong></td>
+                <td>{{ listing['product_name'] }}</td>
+                <td>${{ listing['reserve_price'] }}</td>
+                <td><span class="badge badge-inactive">Inactive</span></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p class="text-muted mb-3">No inactive listings.</p>
+{% endif %}
+
+<h2 class="section-title">Sold Listings</h2>
+{% if sold %}
+<div class="table-wrap mb-3">
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Product</th>
+                <th>Reserve Price</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for listing in sold %}
+            <tr>
+                <td><strong>{{ listing['auction_title'] }}</strong></td>
+                <td>{{ listing['product_name'] }}</td>
+                <td>${{ listing['reserve_price'] }}</td>
+                <td><span class="badge badge-sold">Sold</span></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p class="text-muted mb-3">No sold listings.</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Remove Listing - NittanyAuction{% endblock %}
+
+{% block content %}
+
+<h2 style="color: #0f2044; margin-bottom: 4px;">Remove Listing</h2>
+<p style="color: #9aa5be; font-size: 13px; margin-bottom: 24px;">Logged in as {{ email }}</p>
+
+<div style="max-width: 520px;">
+    <div class="card">
+        <h3 style="font-size: 15px; margin-bottom: 6px;">{{ listing['auction_title'] }}</h3>
+        <p style="color: #5a6580; font-size: 13px; margin-bottom: 18px;">Product: {{ listing['product_name'] }}</p>
+
+        <div class="alert alert-error" style="margin-bottom: 18px;">
+            Warning: Removing this listing will make it inactive and visible only to you.
+        </div>
+
+        <form action="{{ url_for('remove_listing', listing_id=listing['listing_ID']) }}" method="post">
+            <div class="form-group">
+                <label class="form-label">Reason for Removal</label>
+                <textarea name="removal_reason" class="form-control" placeholder="Explain why this listing is being removed..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-danger">Confirm Removal</button>
+            <a href="/seller" class="btn btn-outline" style="margin-left: 8px;">Cancel</a>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

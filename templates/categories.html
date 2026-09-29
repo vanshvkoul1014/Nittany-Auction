@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ display_name }} - NittanyAuction{% endblock %}
+
+{% block head %}
+<style>
+    .subcat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 14px;
+        margin-bottom: 32px;
+    }
+
+    .subcat-link {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #fff;
+        border: 1px solid #e2e6f0;
+        border-radius: 8px;
+        padding: 14px 16px;
+        color: #0f2044;
+        font-weight: 600;
+        font-size: 14px;
+        text-decoration: none;
+    }
+
+    .subcat-link:hover {
+        border-color: #c9a84c;
+        color: #0f2044;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .subcat-arrow {
+        margin-left: auto;
+        color: #9aa5be;
+        font-weight: 400;
+    }
+
+    .no-products {
+        padding: 40px;
+        text-align: center;
+        color: #9aa5be;
+        font-size: 14px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- breadcrumb -->
+<div class="breadcrumb">
+    <a href="/categories">All</a>
+    {% if category_name != 'Root' %}
+        <span>&rsaquo;</span>
+        {% if parent_category %}
+            <a href="{{ url_for('categories', category_name=parent_category) }}">{{ parent_category }}</a>
+            <span>&rsaquo;</span>
+        {% endif %}
+        <span class="breadcrumb-current">{{ display_name }}</span>
+    {% else %}
+        <span class="breadcrumb-current">All Categories</span>
+    {% endif %}
+</div>
+
+<!-- page header -->
+<div class="page-header">
+    <h1>{{ display_name }}</h1>
+    {% if category_name != 'Root' %}
+        <p>
+            {% if parent_category %}
+                <a href="{{ url_for('categories', category_name=parent_category) }}" style="color: rgba(255,255,255,0.7);">&larr; Back to {{ parent_category }}</a>
+            {% else %}
+                <a href="/categories" style="color: rgba(255,255,255,0.7);">&larr; Back to All</a>
+            {% endif %}
+        </p>
+    {% else %}
+        <p>Browse all available categories</p>
+    {% endif %}
+</div>
+
+<!-- featured listings -->
+{% if promoted %}
+<h2 class="section-title">Featured Listings</h2>
+<div class="listings-grid" style="margin-bottom: 36px;">
+    {% for item in promoted %}
+    <div class="listing-card">
+        <div class="listing-card-img">🏷️</div>
+        <div class="listing-card-body">
+            <div class="listing-card-tag">{{ item['category'] }}</div>
+            <div class="listing-card-title">
+                <a href="{{ url_for('listing_detail', seller_email=item['seller_email'], listing_id=item['listing_id']) }}">
+                    {{ item['auction_title'] }}
+                </a>
+            </div>
+            <div class="listing-card-price">${{ item['reserve_price'] }} reserve</div>
+            <div class="listing-card-bid">Current Bid: ${{ item['current_bid'] }}</div>
+            <div class="listing-card-meta">
+                <span>{{ item['seller_email'] }}</span>
+                <a href="{{ url_for('listing_detail', seller_email=item['seller_email'], listing_id=item['listing_id']) }}" class="btn btn-sm btn-primary">View</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- subcategories -->
+{% if subcategories %}
+<h2 class="section-title">Subcategories</h2>
+<div class="subcat-grid">
+    {% for sub in subcategories %}
+    <a href="{{ url_for('categories', category_name=sub['category_name']) }}" class="subcat-link">
+        📁 {{ sub['category_name'] }}
+        <span class="subcat-arrow">&rsaquo;</span>
+    </a>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- products -->
+{% if products %}
+<h2 class="section-title">Listings in {{ display_name }}</h2>
+<div class="listings-grid">
+    {% for product in products %}
+    <div class="listing-card">
+        <div class="listing-card-img">🛍️</div>
+        <div class="listing-card-body">
+            {% if product['is_promoted'] %}
+                <div class="listing-card-tag" style="color: #c9a84c;">&#9733; Featured</div>
+            {% else %}
+                <div class="listing-card-tag">{{ product['category'] }}</div>
+            {% endif %}
+            <div class="listing-card-title">
+                <a href="{{ url_for('listing_detail', seller_email=product['seller_email'], listing_id=product['listing_id']) }}">
+                    {{ product['auction_title'] }}
+                </a>
+            </div>
+            <div class="listing-card-price">${{ product['reserve_price'] }}</div>
+            <div class="listing-card-bid">Current Bid: ${{ product['current_bid'] }}</div>
+            <div class="listing-card-meta">
+                <span>{{ product['remaining_bids'] }} bids left</span>
+                <a href="{{ url_for('listing_detail', seller_email=product['seller_email'], listing_id=product['listing_id']) }}" class="btn btn-sm btn-primary">View</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% elif category_name != 'Root' %}
+<div class="no-products">
+    <p>No listings in this category yet.</p>
+</div>
+{% endif %}
+
+{% endblock %}

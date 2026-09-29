@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - NittanyAuction</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #f4f6fb;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background: linear-gradient(to right, #0f2044, #1a3260);
+            border-bottom: 3px solid #c9a84c;
+            padding: 0 24px;
+            height: 62px;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-family: Georgia, serif;
+            font-size: 1.4rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .logo-nittany { color: #fff; }
+        .logo-auction { color: #c9a84c; font-style: italic; }
+
+        .page-wrap {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px;
+        }
+
+        .login-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            max-width: 860px;
+            width: 100%;
+            background: #fff;
+            border: 1px solid #e2e6f0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .login-left {
+            background: linear-gradient(160deg, #0f2044, #1a3260);
+            padding: 48px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .login-left h2 {
+            font-family: Georgia, serif;
+            font-size: 28px;
+            color: #fff;
+            margin-bottom: 14px;
+            line-height: 1.3;
+        }
+
+        .login-left h2 em {
+            color: #c9a84c;
+            font-style: italic;
+        }
+
+        .login-left p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.6;
+        }
+
+        .login-right {
+            padding: 48px 40px;
+        }
+
+        .login-right h3 {
+            font-size: 20px;
+            color: #0f2044;
+            margin-bottom: 6px;
+        }
+
+        .login-right .sub {
+            font-size: 13px;
+            color: #9aa5be;
+            margin-bottom: 24px;
+        }
+
+        .form-group { margin-bottom: 16px; }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2d3550;
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1.5px solid #e2e6f0;
+            border-radius: 6px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            outline: none;
+            color: #2d3550;
+        }
+
+        .form-control:focus {
+            border-color: #2a4a8a;
+            box-shadow: 0 0 0 3px rgba(42,74,138,0.08);
+        }
+
+        .error-box {
+            background: #fdecea;
+            border: 1px solid #e8a09a;
+            color: #c0392b;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-bottom: 16px;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 11px;
+            background: #0f2044;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 4px;
+        }
+
+        .btn-login:hover { background: #1a3260; }
+
+        .register-link {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 13px;
+            color: #9aa5be;
+        }
+
+        .register-link a { color: #2a4a8a; font-weight: 600; }
+        .register-link a:hover { color: #c9a84c; }
+
+        .footer {
+            background: #0f2044;
+            border-top: 2px solid #c9a84c;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .footer-text { font-size: 12px; color: #9aa5be; }
+
+        @media (max-width: 640px) {
+            .login-left { display: none; }
+            .login-container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="/" class="nav-logo">
+        <span class="logo-nittany">Nittany</span><span class="logo-auction">Auction</span>
+    </a>
+</nav>
+
+<div class="page-wrap">
+    <div class="login-container">
+
+        <div class="login-left">
+            <h2>Buy & Sell with<br><em>Confidence</em></h2>
+            <p>NittanyAuction is the campus marketplace for LSU students, faculty, and local vendors.</p>
+        </div>
+
+        <div class="login-right">
+            <h3>Welcome back</h3>
+                   {% with messages = get_flashed_messages(with_categories=true) %}
+            {%  for category, message in messages %}
+                <div class="{{ 'error-msg' if category == 'error' else 'success-msg' }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endwith %}
+
+            <p class="sub">Sign in to your account</p>
+
+            {% if error %}
+            <div class="error-box">{{ error }}</div>
+            {% endif %}
+
+            <form method="POST" action="/login">
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" name="email" class="form-control" placeholder="yourname@lsu.edu" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn-login">Sign In</button>
+            </form>
+
+            <div class="register-link">
+                New to NittanyAuction? <a href="{{ url_for('ureg') }}">Create an account</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<footer class="footer">
+    <span class="nav-logo" style="font-family: Georgia, serif; font-size: 14px;">
+        <span class="logo-nittany">Nittany</span><span class="logo-auction">Auction</span>
+    </span>
+    <span class="footer-text">CMPSC 431W &mdash; Penn State University</span>
+</footer>
+
+</body>
+</html>
