@@ -40,4 +40,4 @@ The Flask session key and helpdesk password come from environment variables. Hel
 
 ## Team and contributions
 
-Built for CMPSC 431W by Sparsh Bodkhe, Benjamin Nesbitt, Siddarth Gupta, and Vansh Vinod (names as recorded in the source README). Individual feature ownership was not documented in the supplied archive; add a verified account of your contributions before using this repository as evidence of specific work.
+Built for CMPSC 431W by Sparsh Bodkhe, Benjamin Nesbitt, Siddarth Gupta, and Vansh Vinod Koul.
